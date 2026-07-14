@@ -1,0 +1,9 @@
+{
+  "area": "governance",
+  "case": "emergency_moves_funds",
+  "spec": "SPEC-governance section 5",
+  "description": "An Emergency action passed the guardian caucus but would move value. Emergency may only pause.",
+  "action": { "type": "emergency_pause", "moves_value": true },
+  "expected": "unenactable",
+  "violation": "EmergencyMovesValue"
+}

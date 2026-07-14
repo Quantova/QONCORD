@@ -1,0 +1,9 @@
+[package]
+name = "qtv-tally"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+description = "QONCORD ballot verification and tally: ML-DSA ballots aggregated per epoch into one STARK certificate per referendum."
+repository = "https://github.com/Quantova/QONCORD"
+
+[dependencies]

@@ -1,0 +1,9 @@
+{
+  "area": "governance",
+  "case": "over_ceiling_mint",
+  "spec": "SPEC-governance sections 3 and 5",
+  "description": "A Monetary referendum passed its vote but would mint above the hard per-epoch ceiling.",
+  "action": { "type": "mint", "amount": 3, "epoch_minted": 99, "epoch_ceiling": 100 },
+  "expected": "unenactable",
+  "violation": "OverMintCeiling"
+}
