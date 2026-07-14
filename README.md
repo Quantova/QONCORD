@@ -1,6 +1,6 @@
 QONCORD
 
-QONCORD is the governance protocol of the Quantova network. It is the first governance system with tallies proven by STARK certificates, judicial powers bound to signed evidence, and a constitution enforced by the runtime itself. Its guiding rule is that no vote is above the law.
+QONCORD is the governance protocol of the Quantova network. It is the first governance system with tallies proven by STARK certificates, judicial powers bound to signed evidence, and a constitution enforced by the protocol itself. Its guiding rule is that no vote is above the law.
 
 Overview
 
@@ -10,7 +10,7 @@ The seven tracks
 
 Governance runs as seven parallel tracks. Each track has its own deposit, decision period, enactment delay, and thresholds. The genesis values below are frozen starting points and can be changed later only through the Constitution track.
 
-Constitution. This track amends the constitution, the track parameters, and the runtime. It carries the largest deposit of 100 thousand QTOV, a decision period of 28 days, and an enactment delay of 14 days. It passes at 60 percent approval with support of at least 25 percent of all staked value. Even this track is bounded by the five invariants.
+Constitution. This track amends the constitution, the track parameters, and the node logic. It carries the largest deposit of 100 thousand QTOV, a decision period of 28 days, and an enactment delay of 14 days. It passes at 60 percent approval with support of at least 25 percent of all staked value. Even this track is bounded by the five invariants.
 
 Crypto Transition. This track adds or retires approved cryptographic schemes and sets key rotation windows. Its deposit is 50 thousand QTOV, its decision period is 28 days, its enactment delay is 30 days, and it passes at 66 percent approval with 20 percent support. A proposal on this track must include an external cryptanalysis report or it is invalid. This is the only path that can change the algorithm set, and it can never introduce a classical primitive.
 
@@ -30,7 +30,7 @@ Voters strengthen a vote by locking stake. The multiplier runs from one time wit
 
 Monetary law
 
-Minting the native asset exists only through the Monetary track. It is capped by a hard ceiling for each epoch, set at genesis so that cumulative minting stays at or below 2 percent per year. A referendum that would mint above the ceiling is not merely outvoted. It is unenactable. The runtime refuses it the way it refuses a malformed transaction. Every mint records the referendum identifier and the tally certificate.
+Minting the native asset exists only through the Monetary track. It is capped by a hard ceiling for each epoch, set at genesis so that cumulative minting stays at or below 2 percent per year. A referendum that would mint above the ceiling is not merely outvoted. It is unenactable. The protocol refuses it the way it refuses a malformed transaction. Every mint records the referendum identifier and the tally certificate.
 
 The Justice Protocol
 
@@ -42,7 +42,7 @@ The clawback power is slow and evidentiary. A Justice referendum opens by citing
 
 The Constitution
 
-Five invariants are enforced by the runtime, and no track can cross them, not even the Constitution track. First, no track may introduce classical or non approved cryptography, because the crypto policy outranks governance itself. Second, Justice can never touch validator stake, consensus parameters, or governance locks. Third, Emergency pauses and never moves value, and every pause expires. Fourth, mint ceilings, freeze expiry, appeal windows, and scope locks are runtime invariants, so any referendum that violates them is unenactable. Fifth, every enacted referendum permanently stores the proposal hash, the evidence hash where the action is judicial, the STARK tally certificate, and the enactment receipt.
+Five invariants are enforced by the protocol, and no track can cross them, not even the Constitution track. First, no track may introduce classical or non approved cryptography, because the crypto policy outranks governance itself. Second, Justice can never touch validator stake, consensus parameters, or governance locks. Third, Emergency pauses and never moves value, and every pause expires. Fourth, mint ceilings, freeze expiry, appeal windows, and scope locks are protocol invariants, so any referendum that violates them is unenactable. Fifth, every enacted referendum permanently stores the proposal hash, the evidence hash where the action is judicial, the STARK tally certificate, and the enactment receipt.
 
 The tally pipeline
 
@@ -50,7 +50,7 @@ Each ballot is a lattice signature over the referendum identifier, the choice, a
 
 Repository contents
 
-This repository holds the runtime crates and the system contracts for QONCORD. The runtime crates cover the referendum lifecycle, the conviction and delegation ledger, the ballot verification and tally, and the constitutional gate that refuses any action which crosses an invariant. The system contracts hold the Recovery Escrow and the Evidence Registry, written in the Quanta language once its compiler is ready.
+This repository holds the protocol crates and the system contracts for QONCORD. The protocol crates cover the referendum lifecycle, the conviction and delegation ledger, the ballot verification and tally, and the constitutional gate that refuses any action which crosses an invariant. The system contracts hold the Recovery Escrow and the Evidence Registry, written in the Quanta language once its compiler is ready.
 
 Status and governance
 

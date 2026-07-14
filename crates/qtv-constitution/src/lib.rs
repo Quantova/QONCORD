@@ -1,7 +1,7 @@
 //! The constitutional gate for QONCORD (SPEC-governance section 5).
 //!
 //! Every action arriving at the enactment queue passes through [`check_enactment`]. An action that
-//! crosses a machine-enforced invariant is refused the way the runtime refuses a malformed
+//! crosses a machine-enforced invariant is refused the way the protocol refuses a malformed
 //! transaction. The invariant enforcement is implemented after SPEC-governance merges; the negative
 //! tests in `tests/constitution_gate.rs` are written first and stay red until the gate rejects each
 //! violating action.
