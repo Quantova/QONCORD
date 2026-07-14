@@ -1,0 +1,9 @@
+{
+  "area": "governance",
+  "case": "justice_touches_stake",
+  "spec": "SPEC-governance sections 4 and 5",
+  "description": "A Justice referendum passed but its enactment would reach validator stake, crossing the governance and consensus firewall.",
+  "action": { "type": "justice_seize", "targets_validator_stake": true, "within_bundle": true },
+  "expected": "unenactable",
+  "violation": "JusticeTouchesConsensus"
+}
