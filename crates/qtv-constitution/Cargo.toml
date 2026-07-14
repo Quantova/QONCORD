@@ -1,0 +1,9 @@
+[package]
+name = "qtv-constitution"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+description = "QONCORD constitutional gate: refuses any action that crosses a machine-enforced invariant at enactment."
+repository = "https://github.com/Quantova/QONCORD"
+
+[dependencies]

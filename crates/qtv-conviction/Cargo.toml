@@ -1,0 +1,9 @@
+[package]
+name = "qtv-conviction"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+description = "QONCORD conviction ledger and per-track delegation: lock-multiplied vote weight from one to six."
+repository = "https://github.com/Quantova/QONCORD"
+
+[dependencies]
