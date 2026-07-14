@@ -1,16 +1,15 @@
 # Contributing
 
-This repository implements SPEC-governance.md from the Quantova Specs repository. Read POLICY-crypto.md (the supreme law) and SPEC-governance.md before contributing. Any conflict with the crypto policy means stop and report.
+This repository is part of the Quantova post quantum stack. Before you contribute, read the crypto policy and the handoff in the Quantova Specs repository. The crypto policy is the supreme law. If anything you are asked to do conflicts with it, stop and report.
 
 ## Cryptography
-Ballots are ML-DSA signatures and tallies are STARK certificates. Only NIST post-quantum algorithms exist here. Banned crates are enforced by `cargo deny check` (see deny.toml). No classical cryptography and no pairing based aggregation.
 
-## Commits and PRs
-- Author only as the owner: quantova-inc / Quantovaorg@gmail.com. No AI attribution anywhere.
-- Never push to main. Branch feat/<crate>, open a PR, merge only on green CI.
-- Every PR cites the SPEC-governance.md section it implements. Cross-repo dependencies pin git tags.
-- Genesis governance parameters are frozen. Changes arrive only as founder approved spec PRs.
+Only the NIST post quantum algorithms exist in this stack. These are ML KEM from FIPS 203, ML DSA from FIPS 204, SLH DSA from FIPS 205, FN DSA once it is final, SHA 3 and SHAKE from FIPS 202, the 256 bit symmetric primitives, and hash based STARKs. Classical cryptography cannot be expressed. The banned crates, including transitive and development dependencies, are enforced by cargo deny using the deny file. The one exempt repository is Q Oracle, and nothing imports it.
+
+## Commits and pull requests
+
+Author every commit as the repository owner only, with no other attribution anywhere. Write clean code with few comments and no filler. Never push straight to main. Work on a feature branch, open a pull request, and merge only when the checks are green. Every pull request names the specification section it implements. Cross repo dependencies pin git tags.
 
 ## Claims discipline
-Say STARK-proven tallies, evidence-bound enactment, machine-enforced constitution, and no vote above the law. Never say capture-proof, censorship-proof, or unhackable.
 
+Say sub second deterministic finality, one hundred thousand or more transactions per second through batch proofs and parallel execution, near trustless Bitcoin deposits, and trust minimized exits. Never say millisecond global finality, fully trustless bridge, or quantum proof.

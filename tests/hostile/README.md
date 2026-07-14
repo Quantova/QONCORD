@@ -1,8 +1,5 @@
 # Hostile governance vectors
 
-Each vector describes a referendum that PASSED its vote but crosses a constitutional invariant
-(SPEC-governance section 5). The required result is the same for all: **unenactable**. The protocol
-refuses the action the way it refuses a malformed transaction.
+Each vector describes a referendum that passed its vote but crosses a constitutional invariant, as set out in section 5 of the governance specification. The required result is the same for all of them. The referendum is unenactable, and the protocol refuses the action the way it refuses a malformed transaction.
 
-These vectors are mirrored into `Quantova-Conformance/vectors/hostile/` and are enforced by the
-negative tests in `crates/qtv-constitution/tests/constitution_gate.rs`.
+These vectors are mirrored into the Quantova Conformance repository under the hostile vectors folder, and they are enforced by the negative tests in the constitution crate.
