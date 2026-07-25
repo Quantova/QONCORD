@@ -1,3 +1,6 @@
+// Copyright 2026 Quantova Inc
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 //! The constitutional gate for QONCORD (SPEC-governance section 5).
 
 /// An action proposed for enactment by a passed referendum.

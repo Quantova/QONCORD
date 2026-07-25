@@ -1,3 +1,6 @@
+// Copyright 2026 Quantova Inc
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 //! Constitutional negative tests (SPEC-governance section 5). These are written first and are RED
 
 use qtv_constitution::{check_enactment, ConstitutionViolation, ProposedAction};
