@@ -2,13 +2,16 @@
 // STUB: awaiting the Quanta compiler (SPEC-quanta-language Step 7). Stores hash committed Evidence
 // Bundles and gates freeze enactment behind the guardian caucus via `Quorum`. A freeze is scope
 // locked to the bundle hash and cannot widen.
+// Filing escrows a real reporter bond on chain, not a self declared field.
 
-import { Q_Sig, Quorum } from "quantova/primitives";
+import { Q_Asset, Q_Sig, Quorum } from "quantova/primitives";
 import { Registry, Map } from "quantova/stdlib";
 
 contract EvidenceRegistry {
   state {
     bundles: Map<Q_Hash, BundleHeader>;
+    bonds: Q_Asset<QTOV>;
+    bonded: Map<Q_Hash, u128>;
     frozen: Registry<Q_Address>;
     guardians: GuardianSet<11>;
   }
@@ -17,10 +20,13 @@ contract EvidenceRegistry {
     guardians = deploy_params.guardians;
   }
 
-  entry file_bundle(bundle: EvidenceBundle signed by reporter)
-    writes(bundles)
+  entry file_bundle(bundle: EvidenceBundle signed by reporter, posted: Q_Asset<QTOV>)
+    conserves QTOV
+    writes(bundles, bonds, bonded)
   {
-    guard bundle.bond >= 1_000;
+    guard posted.amount >= 1_000;
+    bonds.merge(posted);
+    bonded.credit(bundle.hash, posted.amount);
     bundles.insert(bundle.hash, bundle.header);
     emit BundleFiled(bundle.hash, reporter);
   }

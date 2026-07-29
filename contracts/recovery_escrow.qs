@@ -3,6 +3,7 @@
 // only: `conserves` on every asset flow, `signed by` for victim claims, `Quorum` for the guardian
 // caucus, and `after` for the claim and residue windows. Clawback is cryptographically scoped to the
 // cited Evidence Bundle, so nothing outside the bundle is reachable.
+// Each claim is bound to the claimant's own entitlement and is paid at most once.
 
 import { Q_Asset, Q_Sig, Quorum } from "quantova/primitives";
 import { Registry } from "quantova/stdlib";
@@ -14,6 +15,7 @@ contract RecoveryEscrow {
     bundle_hash: Q_Commit<EvidenceBundle>;
     escrow: Q_Asset<RECOVERED>;
     claimants: Registry<Q_Address>;
+    claimed: Registry<Q_Address>;
     opened_at: Time;
   }
 
@@ -23,14 +25,17 @@ contract RecoveryEscrow {
   }
 
   entry claim(proof: ClaimProof signed by claimant)
-    writes(escrow)
+    writes(escrow, claimed)
     conserves RECOVERED
-    denies !claimants.contains(proof.claimant)
+    denies !claimants.contains(claimant)
   {
+    guard !claimed.contains(claimant);
+    guard bundle_hash.opens(claimant, proof.amount, proof.path);
     guard escrow.amount >= proof.amount;
+    claimed.insert(claimant);
     let payout = escrow.split(proof.amount);
-    send(proof.claimant, payout);
-    emit Claimed(proof.claimant, proof.amount);
+    send(claimant, payout);
+    emit Claimed(claimant, proof.amount);
   }
 
   entry sweep_residue(approvals: Quorum<7 of 11, guardians>)
