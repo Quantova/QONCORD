@@ -30,9 +30,6 @@ pub enum ConstitutionViolation {
 }
 
 /// Refuse any action that crosses a constitutional invariant. Returns `Ok` only for actions the
-/// constitution permits. The invariants (SPEC-governance section 5): a mint may never carry the
-/// epoch past its ceiling; a Justice seizure may never reach validator stake or consensus and may
-/// never leave its approved bundle; an Emergency action pauses only and may never move value.
 pub fn check_enactment(action: &ProposedAction) -> Result<(), ConstitutionViolation> {
     match action {
         ProposedAction::Mint {
