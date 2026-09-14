@@ -30,6 +30,39 @@ pub enum ConstitutionViolation {
 }
 
 /// Refuse any action that crosses a constitutional invariant. Returns `Ok` only for actions the
-pub fn check_enactment(_action: &ProposedAction) -> Result<(), ConstitutionViolation> {
-    todo!("constitutional gate is implemented after SPEC-governance merges")
+/// constitution permits. The invariants (SPEC-governance section 5): a mint may never carry the
+/// epoch past its ceiling; a Justice seizure may never reach validator stake or consensus and may
+/// never leave its approved bundle; an Emergency action pauses only and may never move value.
+pub fn check_enactment(action: &ProposedAction) -> Result<(), ConstitutionViolation> {
+    match action {
+        ProposedAction::Mint {
+            amount,
+            epoch_minted,
+            epoch_ceiling,
+        } => {
+            let after = epoch_minted.saturating_add(*amount);
+            if after > *epoch_ceiling {
+                return Err(ConstitutionViolation::OverMintCeiling);
+            }
+            Ok(())
+        }
+        ProposedAction::JusticeSeize {
+            targets_validator_stake,
+            within_bundle,
+        } => {
+            if *targets_validator_stake {
+                return Err(ConstitutionViolation::JusticeTouchesConsensus);
+            }
+            if !*within_bundle {
+                return Err(ConstitutionViolation::OutOfBundleScope);
+            }
+            Ok(())
+        }
+        ProposedAction::EmergencyPause { moves_value } => {
+            if *moves_value {
+                return Err(ConstitutionViolation::EmergencyMovesValue);
+            }
+            Ok(())
+        }
+    }
 }

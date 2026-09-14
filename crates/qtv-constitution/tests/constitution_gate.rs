@@ -50,3 +50,28 @@ fn emergency_cannot_move_value() {
         Err(ConstitutionViolation::EmergencyMovesValue)
     );
 }
+
+#[test]
+fn a_mint_within_the_ceiling_is_enactable() {
+    let action = ProposedAction::Mint {
+        amount: 1,
+        epoch_minted: 99,
+        epoch_ceiling: 100,
+    };
+    assert_eq!(check_enactment(&action), Ok(()));
+}
+
+#[test]
+fn a_bundled_justice_seizure_off_validator_stake_is_enactable() {
+    let action = ProposedAction::JusticeSeize {
+        targets_validator_stake: false,
+        within_bundle: true,
+    };
+    assert_eq!(check_enactment(&action), Ok(()));
+}
+
+#[test]
+fn an_emergency_pause_that_moves_no_value_is_enactable() {
+    let action = ProposedAction::EmergencyPause { moves_value: false };
+    assert_eq!(check_enactment(&action), Ok(()));
+}
