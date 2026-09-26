@@ -40,7 +40,7 @@ The bridge freeze is a bonded action rather than a vote, so it halts every bridg
 
 ## The constitution gate
 
-Before any approved action runs, the chain checks it against its track and its scope. An action raised on the wrong track is refused. An asset recovery must match the exact seizure set that was voted, and it can never take from a protected core account. A freeze or a blacklist can never target a protected core account. Protected core accounts are the keyless network pots, such as the treasury and the grants account. Every enacted referendum stores an enactment receipt with the proposal hash, the scope, and the tally.
+Before any approved action runs, the chain checks it against its track and its scope. An action raised on the wrong track is refused. An asset recovery must match the exact seizure set that was voted, and it can never take from a protected core account. A recovery takes from a frozen holder's free balance first, then its validator bond, then its governance vote lock, so stolen funds moved into staking are pulled back to the victim address. A frozen validator drops out of the consensus roster, so stolen stake can never produce or finalize blocks, while the holder can still vote so a freeze can never silence the electorate. A freeze or a blacklist can never target a protected core account. Protected core accounts are the keyless network pots, such as the treasury and the grants account. Every enacted referendum stores an enactment receipt with the proposal hash, the scope, and the tally.
 
 ## Repository layout and build state
 
