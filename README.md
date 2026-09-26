@@ -20,7 +20,7 @@ Every proposal is raised on exactly one of five parallel tracks. Each track has 
 | Freeze and asset recovery | 29,250 QTOV | 6 hours | 1 hour | 75% |
 | Blacklist and kill address | 39,000 QTOV | 2 days | 1 day | 75% |
 
-Chain upgrades carries runtime upgrades, feature activation, every parameter change, and guardian rotation. Mint QTOV is the only way to create QTOV after genesis. Bridge pool migration moves the bridge custody pool to a new vault. Freeze and asset recovery freezes a thief and returns the stolen amount to the victim, scoped to the exact seizures that were voted. Blacklist and kill address neutralises a malicious address and also carries the governance lift of a bridge freeze.
+Chain upgrades carries runtime upgrades, feature activation, every parameter change, and guardian rotation. Mint QTOV is the only way to create QTOV after genesis, and it also carries every spend from the grants account and the stake treasury. Bridge pool migration moves the bridge custody pool to a new vault, and it also carries bridge committee rotation, bridged asset registration, operator revocation, and the bridge epoch advance. Freeze and asset recovery freezes a thief and returns the stolen amount to the victim, scoped to the exact seizures that were voted. Blacklist and kill address neutralises a malicious address, freezes and unfreezes accounts, and carries the governance lift of a bridge freeze.
 
 A proposal passes only when three bars hold at once. The aye weight must reach the track threshold of the whole staked electorate, turnout must reach at least 25 percent of that electorate, and aye must exceed nay. The deposit is returned in full when the proposal passes and is not killed, and is otherwise forfeited to the treasury.
 
