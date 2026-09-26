@@ -12,15 +12,17 @@ QONCORD is the governance design repository for Quantova. The governance that ru
 
 Every proposal is raised on exactly one of five parallel tracks. Each track has its own deposit, voting period, enactment delay, and pass threshold, all fixed in code.
 
-| Track | Deposit | Voting period | Enactment delay | Pass threshold |
-|---|---|---|---|---|
-| Chain upgrades | 225,000 QTOV | 14 days | 7 days | 66.67% |
-| Mint QTOV | 400,000 QTOV | 3 days | 7 days | 66.67% |
-| Bridge pool migration | 150,000 QTOV | 5 days | 7 days | 66.67% |
-| Freeze and asset recovery | 29,250 QTOV | 6 hours | 1 hour | 75% |
-| Blacklist and kill address | 39,000 QTOV | 2 days | 1 day | 75% |
+Chain upgrades takes a deposit of 225 thousand QTOV, votes for 14 days, enacts 7 days later, and passes at 66.67 percent.
 
-Chain upgrades carries runtime upgrades, feature activation, every parameter change, and guardian rotation. Mint QTOV is the only way to create QTOV after genesis, and it also carries every spend from the grants account and the stake treasury. Bridge pool migration moves the bridge custody pool to a new vault, and it also carries bridge committee rotation, bridged asset registration, operator revocation, and the bridge epoch advance. Freeze and asset recovery freezes a thief and returns the stolen amount to the victim, scoped to the exact seizures that were voted. Blacklist and kill address neutralises a malicious address, freezes and unfreezes accounts, and carries the governance lift of a bridge freeze.
+Mint QTOV takes a deposit of 400 thousand QTOV, votes for 3 days, enacts 7 days later, and passes at 66.67 percent.
+
+Bridge pool migration takes a deposit of 150 thousand QTOV, votes for 5 days, enacts 7 days later, and passes at 66.67 percent.
+
+Freeze and asset recovery takes a deposit of 29,250 QTOV, votes for 6 hours, enacts 1 hour later, and passes at 75 percent.
+
+Blacklist and kill address takes a deposit of 39 thousand QTOV, votes for 2 days, enacts 1 day later, and passes at 75 percent.
+
+Chain upgrades carries runtime upgrades, feature activation, every parameter change, and guardian rotation. Mint QTOV is the only way to create QTOV after genesis, and it also carries every spend from the grants account and the stake treasury. Bridge pool migration moves the bridge custody pool to a new vault, and it also carries bridge committee rotation, bridged asset registration, operator revocation, and the bridge epoch advance. Freeze and asset recovery returns a recovered amount to the named recipient address, scoped to the exact seizures that were voted. Blacklist and kill address neutralises a malicious address, freezes and unfreezes accounts, and carries the governance lift of a bridge freeze.
 
 A proposal passes only when three bars hold at once. The aye weight must reach the track threshold of the whole staked electorate, turnout must reach at least 25 percent of that electorate, and aye must exceed nay. The deposit is returned in full when the proposal passes and is not killed, and is otherwise forfeited to the treasury.
 
@@ -40,7 +42,7 @@ The bridge freeze is a bonded action rather than a vote, so it halts every bridg
 
 ## The constitution gate
 
-Before any approved action runs, the chain checks it against its track and its scope. An action raised on the wrong track is refused. An asset recovery must match the exact seizure set that was voted, and it can never take from a protected core account. A recovery takes from a frozen holder's free balance first, then its validator bond, then its governance vote lock, so stolen funds moved into staking are pulled back to the victim address. A frozen validator drops out of the consensus roster, so stolen stake can never produce or finalize blocks, while the holder can still vote so a freeze can never silence the electorate. A freeze or a blacklist can never target a protected core account. Protected core accounts are the keyless network pots, such as the treasury and the grants account. Every enacted referendum stores an enactment receipt with the proposal hash, the scope, and the tally.
+Before any approved action runs, the chain checks it against its track and its scope. An action raised on the wrong track is refused. An asset recovery must match the exact seizure set that was voted, and it can never take from a protected core account. A recovery takes from a frozen holder's free balance first, then its validator bond, then its governance vote lock, so value moved into staking is pulled back to the recipient address. A frozen validator drops out of the consensus roster, so frozen stake can never produce or finalize blocks, while the holder can still vote so a freeze can never silence the electorate. A freeze or a blacklist can never target a protected core account. Protected core accounts are the keyless network pots, such as the treasury and the grants account. Every enacted referendum stores an enactment receipt with the proposal hash, the scope, and the tally.
 
 ## Repository layout and build state
 
