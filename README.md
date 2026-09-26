@@ -1,76 +1,58 @@
 # QONCORD
 
-The governance protocol of Quantova. Its ballots are post quantum signatures, its tallies are proven by hash based STARK certificates, its judicial powers are bound to signed evidence, and its constitution is enforced by the protocol rather than by convention. The guiding rule is that no vote is above the law.
+The governance protocol of Quantova. Its ballots are post quantum signatures, its asset recovery is bound to the exact scope that was voted, and its constitution gate is enforced by the protocol rather than by convention. The guiding rule is that no vote is above the law.
 
-Quantova is a sovereign post quantum Layer 1 with only NIST standardized schemes and no classical escape hatch anywhere. QONCORD is built to that same standard. Every ballot is a module lattice signature, every tally is proven on the same certificate wrapper as consensus, and no classical aggregation appears anywhere in the pipeline.
+Quantova is a sovereign post quantum Layer 1 with only NIST standardized schemes and no classical escape hatch anywhere. QONCORD is built to that same standard. Every ballot is a module lattice signature, and no classical cryptography appears anywhere in the pipeline.
 
 ## Overview
 
-QONCORD follows the open governance shape of parallel referendum tracks, conviction voting, and per track delegation, and it rebuilds that shape on post quantum foundations. Governance is bounded by a constitution that no track can cross, not even the track that amends the constitution.
+QONCORD is the governance design repository for Quantova. The governance that runs on chain lives in the `qtv-governance` crate and its ledger wiring in the Quantova-Chain repository, and those rules are the source of truth. This README states them as the chain enforces them. The crates and contracts in this repository are early stubs from an earlier design and are not what the chain runs.
 
-## The seven tracks
+## The five tracks
 
-Governance runs as seven parallel tracks. Each track has its own deposit, decision period, enactment delay, and thresholds. The genesis values below are frozen starting points and can be changed later only through the Constitution track.
+Every proposal is raised on exactly one of five parallel tracks. Each track has its own deposit, voting period, enactment delay, and pass threshold, all fixed in code.
 
-Constitution. Amends the constitution, the track parameters, and the node logic. Deposit of 100 thousand QTOV, a 28 day decision period, and a 14 day enactment delay. Passes at 60 percent approval with support of at least 25 percent of all staked value. Even this track is bounded by the five invariants.
+| Track | Deposit | Voting period | Enactment delay | Pass threshold |
+|---|---|---|---|---|
+| Chain upgrades | 225,000 QTOV | 14 days | 7 days | 66.67% |
+| Mint QTOV | 400,000 QTOV | 3 days | 7 days | 66.67% |
+| Bridge pool migration | 150,000 QTOV | 5 days | 7 days | 66.67% |
+| Freeze and asset recovery | 29,250 QTOV | 6 hours | 1 hour | 75% |
+| Blacklist and kill address | 39,000 QTOV | 2 days | 1 day | 75% |
 
-Crypto Transition. Adds or retires approved cryptographic schemes and sets key rotation windows. Deposit of 50 thousand QTOV, a 28 day decision period, a 30 day enactment delay, passing at 66 percent approval with 20 percent support. A proposal here is invalid without an external cryptanalysis report. This is the only path that can change the algorithm set, and it can never introduce a classical primitive.
+Chain upgrades carries runtime upgrades, feature activation, every parameter change, and guardian rotation. Mint QTOV is the only way to create QTOV after genesis. Bridge pool migration moves the bridge custody pool to a new vault. Freeze and asset recovery freezes a thief and returns the stolen amount to the victim, scoped to the exact seizures that were voted. Blacklist and kill address neutralises a malicious address and also carries the governance lift of a bridge freeze.
 
-Monetary. The only path that can mint the native asset, and it governs the fee split. Deposit of 50 thousand QTOV, a 21 day decision period, a 7 day enactment delay, passing at 66 percent approval with 20 percent support. Minting is capped by a hard ceiling, described below.
-
-Treasury. Spends from the treasury across small, medium, and large lanes with a sliding scale of deposit, decision, and enactment. Deposits range from 1 thousand to 25 thousand QTOV. This track cannot mint.
-
-Justice. Handles freeze extensions and clawback, and only on the basis of signed evidence. Deposit of 25 thousand QTOV, a 14 day decision period, a 7 day enactment delay followed by an appeal window, passing at 75 percent approval with 25 percent support. Justice can never reach validator stake, consensus parameters, or governance locks.
-
-Emergency. A guardian caucus of 7 of 11 can pause a contract, a corridor, or a module within hours. It never moves funds. Any pause expires automatically after 72 hours unless a referendum confirms it.
-
-Standards. Accepts or deprecates standards proposals and carries signaling votes. Deposit of 500 QTOV, a 14 day decision period, passing by simple majority.
+A proposal passes only when three bars hold at once. The aye weight must reach the track threshold of the whole staked electorate, turnout must reach at least 25 percent of that electorate, and aye must exceed nay. The deposit is returned in full when the proposal passes and is not killed, and is otherwise forfeited to the treasury.
 
 ## Voting
 
-A voter strengthens a vote by locking stake. The multiplier runs from one, with no lock, to six, with a lock of 32 weeks. Delegation is chosen for each track, so a holder can delegate one track and vote directly on another. Validators vote as ordinary stakers with no extra weight.
+A voter locks QTOV behind a ballot, up to the size of their bonded stake, and picks a conviction. Conviction one times locks for 1 month, one and a half times for 1 year, and two and a half times for 2 years. The weight of a ballot is the locked amount times its conviction. There is no delegation, so every ballot is cast by the holder who locks the stake. Every ballot is an ML-DSA-65 signed transaction.
 
-## Monetary law
+## Mint cap
 
-Minting the native asset exists only through the Monetary track, and it is capped by a hard ceiling for each epoch, set at genesis so that cumulative minting stays at or below 2 percent per year. A referendum that would mint above the ceiling is not merely outvoted. It is unenactable, refused the way the protocol refuses a malformed transaction. Every mint records the referendum identifier and the tally certificate.
+Minting exists only through the Mint QTOV track, and it is capped at 2 percent of supply per year, and never less than 100,000 QTOV. A mint above the cap is refused at enactment.
 
-## The Justice Protocol
+## Emergency powers
 
-Justice has two powers and both are bound to an Evidence Bundle. An Evidence Bundle is a hash committed record holding exploit traces, signed victim attestations, and an explicit list of addresses and amounts. The bundle hash locks the scope of any action that cites it, so enactment can never reach an address or an amount outside the bundle.
+The guardian caucus is a threshold multisig whose members and threshold are set and rotated only by a Chain upgrades referendum. A caucus is well formed only when its threshold is at least two and is a majority of its members, so no single key can act. Under its threshold the caucus can freeze a batch of accounts for up to 7 days while a recovery or blacklist vote runs, and it can lift a bridge freeze early. It never moves funds, and it can never freeze a protected core account.
 
-The freeze power is fast and reversible. A reporter posts a bond of 1 thousand QTOV, slashed if the report is frivolous, and files an Evidence Bundle. The guardian caucus of 7 of 11 then enacts a temporary freeze on exactly the listed addresses. The freeze is locked to the bundle and cannot widen. It expires automatically after 72 hours unless a Justice referendum opens. Counter evidence can be filed at any time.
+The bridge freeze is a bonded action rather than a vote, so it halts every bridge transfer on the next block. Any account that is not blacklisted can post a 39,000 QTOV bond to freeze the bridge for up to 7 days, with a 1 day cooldown after any lift before the next freeze. The bond is refunded only when the depositor lifts the freeze early. When the freeze expires, or the caucus or governance lifts it, the bond is forfeited to the treasury.
 
-The clawback power is slow and evidentiary. A Justice referendum opens by citing the bundle, runs for 14 days, then holds a 7 day appeal window in which counter evidence triggers one further vote. On enactment the assets move to the Recovery Escrow contract, scoped strictly to the bundle, so anything outside the bundle stays untouched. Victims claim with signed proofs, and any unclaimed remainder moves to the insurance fund after 2 years.
+## The constitution gate
 
-## The Constitution
-
-Five invariants are enforced by the protocol, and no track can cross them, not even the Constitution track.
-
-1. No track may introduce classical or non approved cryptography, because the crypto policy outranks governance itself.
-2. Justice can never touch validator stake, consensus parameters, or governance locks.
-3. Emergency pauses and never moves value, and every pause expires.
-4. Mint ceilings, freeze expiry, appeal windows, and scope locks are protocol invariants, so any referendum that violates them is unenactable.
-5. Every enacted referendum permanently stores the proposal hash, the evidence hash where the action is judicial, the STARK tally certificate, and the enactment receipt.
-
-## The tally pipeline
-
-Each ballot is a module lattice signature over the referendum identifier, the choice, and the conviction. Ballots are aggregated once for each epoch, and each referendum produces exactly one STARK certificate that proves the tally, built from the q-prover circuits and carried on the same certificate wrapper as consensus. No classical aggregation appears anywhere in the pipeline.
+Before any approved action runs, the chain checks it against its track and its scope. An action raised on the wrong track is refused. An asset recovery must match the exact seizure set that was voted, and it can never take from a protected core account. A freeze or a blacklist can never target a protected core account. Protected core accounts are the keyless network pots, such as the treasury and the grants account. Every enacted referendum stores an enactment receipt with the proposal hash, the scope, and the tally.
 
 ## Repository layout and build state
 
-The governance specification, SPEC-governance, lives in the Quantova-Specs repository and is the source of truth. This repository implements it, and it is early.
+- `crates/qtv-tracks`, `crates/qtv-conviction`, and `crates/qtv-tally` are empty stubs.
+- `crates/qtv-constitution` carries an early constitutional gate with negative tests in `tests/constitution_gate.rs`. It models an earlier design and is not the gate the chain runs.
+- `contracts/evidence_registry.qs` and `contracts/recovery_escrow.qs` are stub system contracts from the earlier design, written in the Quanta language.
 
-- `crates/qtv-tracks` fixes the referendum lifecycle and the enactment queue for the seven tracks.
-- `crates/qtv-conviction` fixes the conviction ledger and per track delegation.
-- `crates/qtv-tally` fixes the ballot verification and tally, one STARK certificate per referendum on the consensus wrapper.
-- `crates/qtv-constitution` carries the constitutional gate. Its `check_enactment` refuses any action that crosses an invariant, over the mint ceiling, a Justice action reaching consensus or stepping outside its bundle, or an Emergency action that moves value. The negative tests in `tests/constitution_gate.rs` are written first and stay red until the gate enforces each invariant, so a violating action must be proven unenactable before the gate is called done.
-- `contracts/evidence_registry.qs` and `contracts/recovery_escrow.qs` are the system contracts for the Justice Protocol, written in the Quanta language and awaiting its compiler. They lean on Quanta native guarantees only, `conserves` on every asset flow, `signed by` for claims, `Quorum` for the guardian caucus, and `after` for the timed windows.
-
-The hostile governance vectors in `tests/hostile` describe referenda that passed their vote but cross a constitutional invariant, and they are mirrored into the Quantova-Conformance repository. The required result for every one of them is the same. The referendum is unenactable.
+The hostile governance vectors in `tests/hostile` describe referenda that passed their vote but cross a constitutional invariant, and they are mirrored into the Quantova-Conformance repository.
 
 ## Cryptography
 
-Signatures are ML-DSA-65 from FIPS 204, hashing is SHA-3 and SHAKE from FIPS 202, and tallies are proven with hash based STARKs that rest on hashing alone. There is no elliptic curve anywhere. The stack cryptography is a from scratch reference implementation validated against the NIST vectors. It has not been independently audited, and the chain is at testnet.
+Signatures are ML-DSA-65 from FIPS 204, hashing is SHA-3 and SHAKE from FIPS 202. There is no elliptic curve anywhere. The stack cryptography is a from scratch reference implementation validated against the NIST vectors. It has not been independently audited, and the chain is at testnet.
 
 ## Governance and license
 
