@@ -11,9 +11,10 @@ pub enum ProposedAction {
         epoch_minted: u128,
         epoch_ceiling: u128,
     },
-    /// A Justice enactment. Must never reach validator stake or consensus, and must stay inside the
+    /// A Justice enactment. May reach validator stake only once the holder is frozen, and must stay inside the
     JusticeSeize {
         targets_validator_stake: bool,
+        holder_frozen: bool,
         within_bundle: bool,
     },
     /// An Emergency action. Pauses only; must never move value (SPEC-governance section 5).
@@ -24,7 +25,7 @@ pub enum ProposedAction {
 #[derive(Debug, PartialEq, Eq)]
 pub enum ConstitutionViolation {
     OverMintCeiling,
-    JusticeTouchesConsensus,
+    StakeNotFrozen,
     OutOfBundleScope,
     EmergencyMovesValue,
 }
@@ -45,10 +46,11 @@ pub fn check_enactment(action: &ProposedAction) -> Result<(), ConstitutionViolat
         }
         ProposedAction::JusticeSeize {
             targets_validator_stake,
+            holder_frozen,
             within_bundle,
         } => {
-            if *targets_validator_stake {
-                return Err(ConstitutionViolation::JusticeTouchesConsensus);
+            if *targets_validator_stake && !*holder_frozen {
+                return Err(ConstitutionViolation::StakeNotFrozen);
             }
             if !*within_bundle {
                 return Err(ConstitutionViolation::OutOfBundleScope);

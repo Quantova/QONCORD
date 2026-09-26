@@ -1,0 +1,9 @@
+{
+  "area": "governance",
+  "case": "recovery_from_unfrozen_stake",
+  "spec": "SPEC-governance sections 4 and 5",
+  "description": "A recovery referendum passed but its enactment would take validator stake from a holder that was never frozen. Stake is reachable only once the holder is frozen.",
+  "action": { "type": "justice_seize", "targets_validator_stake": true, "holder_frozen": false, "within_bundle": true },
+  "expected": "unenactable",
+  "violation": "StakeNotFrozen"
+}

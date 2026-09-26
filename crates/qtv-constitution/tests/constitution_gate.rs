@@ -19,14 +19,38 @@ fn over_ceiling_mint_is_unenactable() {
 }
 
 #[test]
-fn justice_cannot_touch_validator_stake() {
+fn justice_cannot_take_stake_from_a_holder_never_frozen() {
     let action = ProposedAction::JusticeSeize {
         targets_validator_stake: true,
+        holder_frozen: false,
         within_bundle: true,
     };
     assert_eq!(
         check_enactment(&action),
-        Err(ConstitutionViolation::JusticeTouchesConsensus)
+        Err(ConstitutionViolation::StakeNotFrozen)
+    );
+}
+
+#[test]
+fn a_bundled_justice_seizure_of_frozen_validator_stake_is_enactable() {
+    let action = ProposedAction::JusticeSeize {
+        targets_validator_stake: true,
+        holder_frozen: true,
+        within_bundle: true,
+    };
+    assert_eq!(check_enactment(&action), Ok(()));
+}
+
+#[test]
+fn frozen_validator_stake_outside_the_bundle_is_unenactable() {
+    let action = ProposedAction::JusticeSeize {
+        targets_validator_stake: true,
+        holder_frozen: true,
+        within_bundle: false,
+    };
+    assert_eq!(
+        check_enactment(&action),
+        Err(ConstitutionViolation::OutOfBundleScope)
     );
 }
 
@@ -34,6 +58,7 @@ fn justice_cannot_touch_validator_stake() {
 fn justice_outside_the_bundle_is_unenactable() {
     let action = ProposedAction::JusticeSeize {
         targets_validator_stake: false,
+        holder_frozen: false,
         within_bundle: false,
     };
     assert_eq!(
@@ -65,6 +90,7 @@ fn a_mint_within_the_ceiling_is_enactable() {
 fn a_bundled_justice_seizure_off_validator_stake_is_enactable() {
     let action = ProposedAction::JusticeSeize {
         targets_validator_stake: false,
+        holder_frozen: false,
         within_bundle: true,
     };
     assert_eq!(check_enactment(&action), Ok(()));
