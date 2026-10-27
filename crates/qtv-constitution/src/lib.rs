@@ -38,7 +38,10 @@ pub fn check_enactment(action: &ProposedAction) -> Result<(), ConstitutionViolat
             epoch_minted,
             epoch_ceiling,
         } => {
-            let after = epoch_minted.saturating_add(*amount);
+            let after = match epoch_minted.checked_add(*amount) {
+                Some(after) => after,
+                None => return Err(ConstitutionViolation::OverMintCeiling),
+            };
             if after > *epoch_ceiling {
                 return Err(ConstitutionViolation::OverMintCeiling);
             }
